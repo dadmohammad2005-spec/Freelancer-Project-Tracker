@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="mb-0">Invoices</h3>
+        <small class="text-muted">Track all your billing and payments</small>
+    </div>
+    <a href="{% url 'invoice_create' %}" class="btn"
+       style="background: linear-gradient(90deg, #f43f5e, #be123c); color:#fff; border:none; border-radius:10px; padding:10px 20px; font-weight:600; box-shadow: 0 4px 12px rgba(244,63,94,0.35);">
+        <i class="bi bi-plus-lg"></i> New Invoice
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm" style="border-radius:16px;">
+    <div class="card-body p-4">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Invoice #</th>
+                    <th>Project</th>
+                    <th>Client</th>
+                    <th>Status</th>
+                    <th>Due Date</th>
+                    <th>Total</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for inv in invoices %}
+                <tr>
+                    <td>
+                        <a href="{% url 'invoice_detail' inv.pk %}" class="text-decoration-none fw-medium" style="color:#1e1b4b;">
+                            <i class="bi bi-receipt" style="color:#f43f5e;"></i> {{ inv.invoice_number }}
+                        </a>
+                    </td>
+                    <td>{{ inv.project.title }}</td>
+                    <td>{{ inv.project.client.name }}</td>
+                    <td>
+                        {% if inv.status == 'paid' %}
+                            <span class="badge" style="background:#dcfce7; color:#166534;"><i class="bi bi-check-circle"></i> Paid</span>
+                        {% elif inv.status == 'overdue' %}
+                            <span class="badge" style="background:#fee2e2; color:#b91c1c;"><i class="bi bi-exclamation-circle"></i> Overdue</span>
+                        {% elif inv.status == 'sent' %}
+                            <span class="badge" style="background:#dbeafe; color:#1e40af;"><i class="bi bi-send"></i> Sent</span>
+                        {% else %}
+                            <span class="badge" style="background:#f1f5f9; color:#475569;">{{ inv.get_status_display }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-muted">{{ inv.due_date }}</td>
+                    <td class="fw-medium" style="color:#059669;">${{ inv.total_amount }}</td>
+                    <td class="text-end">
+                        <a href="{% url 'invoice_update' inv.pk %}" class="btn btn-sm"
+                           style="background:#e0e7ff; color:#4338ca; border-radius:8px; font-weight:500;">
+                            <i class="bi bi-pencil"></i> Edit
+                        </a>
+                        <a href="{% url 'invoice_delete' inv.pk %}" class="btn btn-sm"
+                           style="background:#fee2e2; color:#b91c1c; border-radius:8px; font-weight:500;">
+                            <i class="bi bi-trash"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-5">
+                        <i class="bi bi-receipt" style="font-size:2rem; opacity:0.3;"></i>
+                        <p class="mb-0 mt-2">No invoices yet. Click "New Invoice" to create one.</p>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

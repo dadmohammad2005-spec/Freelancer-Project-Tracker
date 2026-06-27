@@ -1,0 +1,85 @@
+{% extends 'base_auth.html' %}
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height:100vh; background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #6366f1 100%); padding: 20px;">
+    <div class="card shadow-lg border-0" style="width: 400px; border-radius: 18px; overflow:hidden;">
+
+        <div class="text-center pt-4 pb-3" style="background: linear-gradient(90deg, #6366f1, #8b5cf6);">
+            <div class="d-inline-flex align-items-center justify-content-center mb-2"
+                 style="width:55px; height:55px; background:rgba(255,255,255,0.2); border-radius:14px;">
+                <i class="bi bi-briefcase-fill text-white" style="font-size:1.6rem;"></i>
+            </div>
+            <h4 class="text-white fw-bold mb-0">FreelancerTrack</h4>
+            <p class="text-white-50 small mb-0">Welcome back, please login</p>
+        </div>
+
+        <div class="card-body p-4">
+            <form method="post">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger small py-2">{{ form.non_field_errors }}</div>
+                {% endif %}
+
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label fw-medium small text-secondary">
+                            {% if field.name == 'username' %}<i class="bi bi-person"></i> Username
+                            {% elif field.name == 'password' %}<i class="bi bi-lock"></i> Password
+                            {% else %}{{ field.label }}{% endif %}
+                        </label>
+                        <div class="position-relative">
+                            {{ field }}
+                            {% if field.name == 'password' %}
+                                <i class="bi bi-eye-slash position-absolute" id="togglePassword"
+                                   style="right:14px; top:50%; transform:translateY(-50%); cursor:pointer; color:#94a3b8;"></i>
+                            {% endif %}
+                        </div>
+                        {% if field.errors %}
+                            <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="btn w-100 mt-2"
+                        style="background: linear-gradient(90deg, #6366f1, #8b5cf6); color:#fff; border:none; border-radius:10px; padding:11px; font-weight:600; box-shadow: 0 4px 12px rgba(99,102,241,0.4);">
+                    <i class="bi bi-box-arrow-in-right"></i> Login
+                </button>
+            </form>
+
+            <p class="text-center mt-4 mb-0 small text-secondary">
+                New here? <a href="{% url 'register' %}" style="color:#6366f1; font-weight:600; text-decoration:none;">Create an account</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card-body input {
+        border-radius: 8px !important;
+        padding: 10px 38px 10px 12px !important;
+        border: 1px solid #e2e8f0 !important;
+        width: 100% !important;
+    }
+    .card-body input:focus {
+        border-color: #6366f1 !important;
+        box-shadow: 0 0 0 3px rgba(99,102,241,0.15) !important;
+        outline: none;
+    }
+</style>
+
+<script>
+    const toggle = document.getElementById('togglePassword');
+    if (toggle) {
+        toggle.addEventListener('click', function () {
+            const pwdInput = this.parentElement.querySelector('input');
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                this.classList.replace('bi-eye-slash', 'bi-eye');
+            } else {
+                pwdInput.type = 'password';
+                this.classList.replace('bi-eye', 'bi-eye-slash');
+            }
+        });
+    }
+</script>
+{% endblock %}

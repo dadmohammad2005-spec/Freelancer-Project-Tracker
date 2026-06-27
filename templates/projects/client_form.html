@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex align-items-center gap-2 mb-4">
+    <a href="{% url 'client_list' %}" class="text-decoration-none" style="color:#6366f1; font-size:1.3rem;">
+        <i class="bi bi-arrow-left-circle"></i>
+    </a>
+    <div>
+        <h3 class="mb-0">{% if form.instance.pk %}Edit Client{% else %}Add Client{% endif %}</h3>
+        <small class="text-muted">{% if form.instance.pk %}Update client information{% else %}Add a new client to your contacts{% endif %}</small>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm" style="max-width:600px; border-radius:16px;">
+    <div class="card-body p-4">
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger small py-2">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label fw-medium small text-secondary">
+                        {% if field.name == 'name' %}<i class="bi bi-person"></i>
+                        {% elif field.name == 'email' %}<i class="bi bi-envelope"></i>
+                        {% elif field.name == 'phone' %}<i class="bi bi-telephone"></i>
+                        {% elif field.name == 'company' %}<i class="bi bi-building"></i>
+                        {% elif field.name == 'address' %}<i class="bi bi-geo-alt"></i>
+                        {% endif %}
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn flex-grow-1"
+                        style="background: linear-gradient(90deg, #6366f1, #8b5cf6); color:#fff; border:none; border-radius:10px; padding:11px; font-weight:600; box-shadow: 0 4px 12px rgba(99,102,241,0.35);">
+                    <i class="bi bi-check-circle"></i> Save Client
+                </button>
+                <a href="{% url 'client_list' %}" class="btn"
+                   style="background:#f1f4f9; color:#64748b; border-radius:10px; padding:11px 20px; font-weight:500;">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .card-body input, .card-body select, .card-body textarea {
+        border-radius: 8px !important;
+        padding: 9px 12px !important;
+        border: 1px solid #e2e8f0 !important;
+        width: 100%;
+    }
+    .card-body input:focus, .card-body select:focus, .card-body textarea:focus {
+        border-color: #6366f1 !important;
+        box-shadow: 0 0 0 3px rgba(99,102,241,0.15) !important;
+        outline: none;
+    }
+</style>
+{% endblock %}
