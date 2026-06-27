@@ -30,7 +30,8 @@ ALLOWED_HOSTS = [
     '[::1]',
     '.vercel.app',
     'freelancer-project-tracker-ayljnyez0.vercel.app',
-     '*', 
+    'freelancer-project-tracker-nbjom1bn3.vercel.app',
+    '*',
 ]
 
 # Production mein HTTPS settings (DEBUG=False hone par active honge)
